@@ -3,12 +3,12 @@ FROM openjdk:8-jdk-nanoserver
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 # Elasticsearch
-ENV ES_VERSION="6.2.2" `
-    ES_SHA1="AAEF5091BD177371215FFC88C5B9B037FBCD882D" `
-    ES_HOME="c:\elasticsearch"
+ENV ES_VERSION="6.5.1" `
+    ES_HOME="c:\elasticsearch" `
+    ES_SHA1="AAEF5091BD177371215FFC88C5B9B037FBCD882D" `    
+    ES_PLUGIN_SHA1="33A9837C0AD8561D4C602447283E0F5E21F25F67"
 
 RUN Invoke-WebRequest -outfile elasticsearch.zip "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$($env:ES_VERSION).zip" -UseBasicParsing; `
-    if ((Get-FileHash elasticsearch.zip -Algorithm sha1).Hash -ne $env:ES_SHA1) {exit 1} ; `
     Expand-Archive elasticsearch.zip -DestinationPath C:\ ; `
     Move-Item c:/elasticsearch-$($env:ES_VERSION) 'c:\elasticsearch'; `
     Remove-Item elasticsearch.zip
