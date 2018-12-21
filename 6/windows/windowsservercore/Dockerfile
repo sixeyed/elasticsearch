@@ -2,19 +2,13 @@
 FROM sixeyed/openjdk:windowsservercore-ltsc2019
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 # Elasticsearch
-ENV ES_VERSION="6.5.3"
+ENV ES_VERSION="6.5.4"
 ENV ES_HOME="c:\elasticsearch"
 
 RUN Invoke-WebRequest -outfile elasticsearch.zip "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$($env:ES_VERSION).zip" -UseBasicParsing;
 RUN Expand-Archive elasticsearch.zip -DestinationPath C:\ ;
 RUN Move-Item c:/elasticsearch-$($env:ES_VERSION) 'c:\elasticsearch';
 RUN Remove-Item elasticsearch.zip
-
-RUN Invoke-WebRequest -outfile elasticsearchplugin.zip "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-$($env:ES_VERSION).zip" -UseBasicParsing; `
-    if ((Get-FileHash elasticsearchplugin.zip -Algorithm sha1).Hash -ne $env:ES_PLUGIN_SHA1) {exit 1} ; `
-    Expand-Archive elasticsearchplugin.zip -DestinationPath C:\ ; `
-    Move-Item c:/elasticsearchplugin-$($env:ES_VERSION) 'c:\elasticsearchplugin'; `
-    Remove-Item elasticsearchplugin.zip
 
 VOLUME c:/data
 
